@@ -31,8 +31,8 @@ class imageuploader
 
     public function __construct()
     {
-        $this->bucketName = env('GOOGLE_APPLICATION_BUCKET');
-        $this->projectId = env('GOOGLE_APPLICATION_ID');
+        $this->bucketName = env('GOOGLE_CLOUD_STORAGE_BUCKET');
+        $this->projectId = env('GOOGLE_CLOUD_PROJECT_ID');
         $this->request = app(Request::class);
     }
 
@@ -90,7 +90,8 @@ class imageuploader
         $imageBuffer = $uploadedImage->toBuffer();
 
         $storage = new StorageClient([
-            'projectId' => $imageUploader->projectId
+            'projectId' => $imageUploader->projectId,
+            'keyFilePath' => env('GOOGLE_CLOUD_KEY_FILE')
         ]);
 
         $bucket = $storage->bucket($imageUploader->bucketName);

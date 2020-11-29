@@ -8,7 +8,13 @@ use ItsIrv\ImageUploader\Image;
 
 class ImageController extends Controller
 {
-    public function Upload(Request $request, ImageUploader $imageUploader)
+
+    public function index()
+    {
+        return view('imageloader::images');
+    }
+
+    public function upload(Request $request, ImageUploader $imageUploader)
     {
         $image = $imageUploader->getImageOrFail('image');
 
@@ -22,9 +28,9 @@ class ImageController extends Controller
         $baseName = $variations[0]->generateRandomName();
         $baseName = str_replace('.png', '', $baseName);
 
-        $imagesCreated = [];
+        $imagesCreated = collect();
 
-        foreach($variations as $image) {
+        foreach ($variations as $image) {
             $storageObject = $imageUploader->uploadImageToDrive(
                 $image,
                 $image->nameWithSizeAppended($baseName)
@@ -36,19 +42,15 @@ class ImageController extends Controller
 
                 $image->save();
 
-                array_push($imagesCreated, $image->name);
+                $imagesCreated->push($image);
             }
         }
-
-        return response()->json(['message' => 'OK', 'data' => $imagesCreated]);
+        return response()->json([$imagesCreated->toArray()]);
     }
 
     public function GetAll()
     {
-        $data = [
-            'images' => Image::limit(10)->get()
-        ];
-
-        return view('imageloader::images', $data);
+        $images = Image::all();
+        return response()->json($images);
     }
 }

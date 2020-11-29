@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'cloud' => env('FILESYSTEM_CLOUD', 's3'),
+    'cloud' => env('FILESYSTEM_CLOUD', 'gcs'),
 
     /*
     |--------------------------------------------------------------------------
@@ -63,7 +63,12 @@ return [
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
         ],
-
+        'gcs'=>[
+            'driver'=>'gcs',
+            'project_id'=>env('GOOGLE_CLOUD_PROJECT_ID'),
+            'key_file'=>env('GOOGLE_CLOUD_KEY_FILE'),
+            'bucket'=>env('GOOGLE_CLOUD_STORAGE_BUCKET')
+        ]
     ],
 
 ];
